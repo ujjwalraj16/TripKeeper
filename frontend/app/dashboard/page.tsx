@@ -78,10 +78,10 @@ export default function DashboardPage() {
         {/* Feature cards — placeholders for upcoming phases */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           {[
-            { icon: "📍", label: "Places", desc: "Save and organise your favourite spots", href: "#", phase: 3 },
-            { icon: "🗓️", label: "Trips", desc: "Plan day-by-day itineraries", href: "#", phase: 4 },
-            { icon: "🤖", label: "AI Planner", desc: "Let AI generate your itinerary", href: "#", phase: 6 },
-          ].map(({ icon, label, desc, href, phase }) => (
+            { icon: "📍", label: "Places", desc: "Save and organise your favourite spots", href: "/places", phase: 3, ready: true },
+            { icon: "🗓️", label: "Trips", desc: "Plan day-by-day itineraries", href: "#", phase: 4, ready: false },
+            { icon: "🤖", label: "AI Planner", desc: "Let AI generate your itinerary", href: "#", phase: 6, ready: false },
+          ].map(({ icon, label, desc, href, phase, ready }) => (
             <a
               key={label}
               href={href}
@@ -91,7 +91,9 @@ export default function DashboardPage() {
               <span className="text-4xl">{icon}</span>
               <h2 className="text-lg font-semibold">{label}</h2>
               <p className="text-sm text-gray-500 text-center">{desc}</p>
-              <span className="text-xs text-indigo-500 mt-auto">Coming in Phase {phase}</span>
+              <span className={`text-xs mt-auto font-medium ${ready ? "text-emerald-400" : "text-indigo-500"}`}>
+                {ready ? "✓ Live" : `Coming in Phase ${phase}`}
+              </span>
             </a>
           ))}
         </div>

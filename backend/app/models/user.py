@@ -6,7 +6,7 @@ Stores credentials; password is always stored hashed, never plain text.
 from datetime import datetime, timezone
 
 from sqlalchemy import Boolean, DateTime, Integer, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
 
@@ -23,3 +23,6 @@ class User(Base):
         DateTime(timezone=True),
         default=lambda: datetime.now(timezone.utc),
     )
+
+    # Relationships
+    places = relationship("Place", back_populates="user", lazy="noload", cascade="all, delete-orphan")

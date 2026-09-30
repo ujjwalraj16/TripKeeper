@@ -1,6 +1,6 @@
 # TripKeeper — Build Progress
 
-## Project Status: 🟢 Phase 2 Complete
+## Project Status: 🟢 Phase 3 Complete
 
 ---
 
@@ -10,7 +10,7 @@
 |---|---|---|---|---|
 | 1 | Setup | ✅ Done | 2026-09-30 | 2026-09-30 |
 | 2 | Authentication | ✅ Done | 2026-09-30 | 2026-09-30 |
-| 3 | Places & Map | ⏳ Pending | — | — |
+| 3 | Places & Map | ✅ Done | 2026-09-30 | 2026-09-30 |
 | 4 | Trips & Itinerary | ⏳ Pending | — | — |
 | 5 | Sharing | ⏳ Pending | — | — |
 | 6 | AI Features | ⏳ Pending | — | — |
@@ -65,15 +65,22 @@
 
 ### Phase 3 — Places & Map
 **Goal:** Place CRUD, Nominatim search, Leaflet map.
-**Status:** ⏳ Pending
+**Status:** ✅ Done
 
 **Deliverables:**
-- [ ] `Place` SQLAlchemy model
-- [ ] CRUD routes scoped to logged-in user
-- [ ] `GET /places/search?q=` via Nominatim
-- [ ] Frontend: Places page with Leaflet map (SSR disabled)
-- [ ] Search box + click-to-save flow
-- [ ] Saved places list with markers on map
+- [x] `Place` SQLAlchemy model (lat/lon, name, category, display_name, notes, user_id FK)
+- [x] CRUD routes scoped to logged-in user (`GET /places`, `POST /places`, `GET /places/{id}`, `DELETE /places/{id}`)
+- [x] `GET /places/search?q=` via Nominatim (proxied server-side with async subprocess curl)
+- [x] Frontend: `/places` page with Leaflet map (SSR disabled via `next/dynamic`)
+- [x] Search box with 500ms debounce + hover-to-preview markers on map
+- [x] Click-to-save flow with indigo preview markers and green saved markers
+- [x] Saved places list with delete button (visible on hover)
+- [x] Dashboard "Places" card now links to `/places` and shows "✓ Live" badge
+
+**Notes:**
+- Nominatim blocks Python's httpx HTTP/2 fingerprint on some networks; fixed with async subprocess curl
+- Leaflet icon paths fixed for Next.js/webpack bundler
+- Map auto-fits bounds to saved places; flyTo animation on search preview
 
 ---
 

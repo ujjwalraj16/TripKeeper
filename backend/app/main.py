@@ -10,8 +10,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
 from app.core.database import init_db
-import app.models.user  # noqa: F401 — registers User table with SQLAlchemy metadata
-from app.api.routes import auth
+import app.models.user   # noqa: F401 — registers User table with SQLAlchemy metadata
+import app.models.place  # noqa: F401 — registers Place table with SQLAlchemy metadata
+from app.api.routes import auth, places
 
 
 @asynccontextmanager
@@ -49,3 +50,6 @@ async def health_check():
 
 # Auth routes: /auth/register, /auth/login, /auth/me
 app.include_router(auth.router, prefix="/auth", tags=["Auth"])
+
+# Places routes: /places (CRUD + Nominatim search)
+app.include_router(places.router, prefix="/places", tags=["Places"])
