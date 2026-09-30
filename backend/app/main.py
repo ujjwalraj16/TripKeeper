@@ -15,8 +15,7 @@ import app.models.place  # noqa: F401 — registers Place table with SQLAlchemy 
 import app.models.trip   # noqa: F401
 import app.models.itinerary # noqa: F401
 import app.models.collaborator # noqa: F401
-from app.api.routes import auth, places, trips
-
+from app.api.routes import auth, places, trips, ai
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -59,3 +58,6 @@ app.include_router(places.router, prefix="/places", tags=["Places"])
 
 # Trips routes: /trips (CRUD + Itinerary)
 app.include_router(trips.router, prefix="/trips", tags=["Trips"])
+
+# AI routes: /ai (Itinerary Gen + Routing)
+app.include_router(ai.router, prefix="/ai", tags=["AI Planner"])

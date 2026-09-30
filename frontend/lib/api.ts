@@ -13,11 +13,24 @@ const api = axios.create({
 // Attach the JWT token (if present) to every outgoing request.
 api.interceptors.request.use((config) => {
   const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    typeof window !== "undefined" ? localStorage.getItem("tk_token") : null;
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
+
+// Auto-logout on 401 Unauthorized
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401 && typeof window !== "undefined") {
+      localStorage.removeItem("tk_token");
+      localStorage.removeItem("tk_user");
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default api;

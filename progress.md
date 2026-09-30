@@ -13,7 +13,7 @@
 | 3 | Places & Map | ✅ Done | 2026-09-30 | 2026-09-30 |
 | 4 | Trips & Itinerary | ✅ Done | 2026-09-30 | 2026-09-30 |
 | 5 | Sharing | ✅ Done | 2026-09-30 | 2026-09-30 |
-| 6 | AI Features | ⏳ Pending | — | — |
+| 6 | AI Features | ✅ Done | 2026-09-30 | 2026-09-30 |
 | 7 | AI Agent | ⏳ Pending | — | — |
 | 8 | Polish | ⏳ Pending | — | — |
 
@@ -115,16 +115,16 @@
 
 ### Phase 6 — AI Features (Ollama)
 **Goal:** AI itinerary generator + route optimizer.
-**Status:** ⏳ Pending
+**Status:** ✅ Done
 
 **Deliverables:**
-- [ ] `POST /ai/plan` — Ollama structured output with Pydantic validation
-- [ ] Geocode each stop and save as a real trip
-- [ ] Up to 3 retries on invalid LLM output
-- [ ] Nearest-neighbor + 2-opt route optimizer service
-- [ ] Friendly error if Ollama is not running / model not pulled
-- [ ] `OLLAMA_MODEL` and `OLLAMA_HOST` from `.env`
-- [ ] Loading states in UI
+- [x] `POST /ai/plan` — Ollama structured output with Pydantic validation
+- [x] Geocode each stop and save as a real trip
+- [x] Up to 3 retries on invalid LLM output
+- [x] Nearest-neighbor + 2-opt route optimizer service
+- [x] Friendly error if Ollama is not running / model not pulled
+- [x] `OLLAMA_MODEL` and `OLLAMA_HOST` from `.env`
+- [x] Loading states in UI
 
 ---
 

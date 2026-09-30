@@ -80,7 +80,7 @@ export default function DashboardPage() {
           {[
             { icon: "📍", label: "Places", desc: "Save and organise your favourite spots", href: "/places", phase: 3, ready: true },
             { icon: "🗓️", label: "Trips", desc: "Plan day-by-day itineraries", href: "/trips", phase: 4, ready: true },
-            { icon: "🤖", label: "AI Planner", desc: "Let AI generate your itinerary", href: "#", phase: 6, ready: false },
+            { icon: "🤖", label: "AI Planner", desc: "Let AI generate your itinerary", href: "/ai-planner", phase: 6, ready: true },
           ].map(({ icon, label, desc, href, phase, ready }) => (
             <a
               key={label}
