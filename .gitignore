@@ -1,0 +1,60 @@
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# Virtual environment
+backend/venv/
+venv/
+.venv/
+
+# Environment variables (never commit real secrets)
+.env
+*.env.local
+
+# SQLite database file
+*.db
+*.sqlite3
+
+# pytest
+.pytest_cache/
+*.pytest_cache
+
+# Coverage
+.coverage
+htmlcov/
+
+# ── Node / Next.js ────────────────────────────────────────────────────────────
+node_modules/
+.next/
+out/
+frontend/.next/
+frontend/out/
+frontend/node_modules/
+
+# Next.js build output
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ── OS / Editor ───────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ── ChromaDB / AI ─────────────────────────────────────────────────────────────
+chroma_db/
+*.chroma
+
+# ── Misc ──────────────────────────────────────────────────────────────────────
+*.log
