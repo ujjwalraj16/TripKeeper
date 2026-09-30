@@ -145,13 +145,13 @@
 
 ### Phase 8 — Polish
 **Goal:** README, error handling, loading states.
-**Status:** ⏳ Pending
+**Status:** ✅ Done
 
 **Deliverables:**
-- [ ] README with features, architecture diagram, setup steps
-- [ ] Ollama install + `ollama pull qwen2.5:7b` instructions
-- [ ] Global error boundaries and loading skeletons in frontend
-- [ ] Screenshot placeholders in README
+- [x] README with features, architecture diagram, setup steps
+- [x] Ollama install + `ollama pull qwen2.5:7b` instructions
+- [x] Global error boundaries and loading skeletons in frontend
+- [x] Screenshot placeholders in README
 
 ---
 
