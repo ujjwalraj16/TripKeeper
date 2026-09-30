@@ -1,6 +1,6 @@
 # TripKeeper — Build Progress
 
-## Project Status: 🟢 Phase 1 Complete
+## Project Status: 🟢 Phase 2 Complete
 
 ---
 
@@ -9,7 +9,7 @@
 | # | Phase | Status | Started | Completed |
 |---|---|---|---|---|
 | 1 | Setup | ✅ Done | 2026-09-30 | 2026-09-30 |
-| 2 | Authentication | ⏳ Pending | — | — |
+| 2 | Authentication | ✅ Done | 2026-09-30 | 2026-09-30 |
 | 3 | Places & Map | ⏳ Pending | — | — |
 | 4 | Trips & Itinerary | ⏳ Pending | — | — |
 | 5 | Sharing | ⏳ Pending | — | — |
@@ -45,17 +45,21 @@
 
 ### Phase 2 — Authentication
 **Goal:** JWT-based register/login with frontend pages.
-**Status:** ⏳ Pending
+**Status:** ✅ Done
 
 **Deliverables:**
-- [ ] `User` SQLAlchemy model
-- [ ] Pydantic schemas (UserCreate, UserRead, Token)
-- [ ] Password hashing with `passlib[bcrypt]`
-- [ ] `POST /auth/register` and `POST /auth/login`
-- [ ] `get_current_user` FastAPI dependency
-- [ ] Frontend: `/login` and `/register` pages
-- [ ] Token stored in localStorage; redirect to `/dashboard`
-- [ ] Basic auth route tests
+- [x] `User` SQLAlchemy model
+- [x] Pydantic schemas (UserCreate, UserRead, Token, TokenData)
+- [x] Password hashing with `passlib[bcrypt]` (pinned bcrypt==4.2.1 for Python 3.14)
+- [x] `POST /auth/register` — returns 201 + JWT
+- [x] `POST /auth/login` — returns JWT
+- [x] `GET /auth/me` — returns current user profile
+- [x] `get_current_user` FastAPI dependency in `core/deps.py`
+- [x] Frontend: `/register` page with controlled form + error display
+- [x] Frontend: `/login` page with controlled form + error display
+- [x] Frontend: `/dashboard` protected page (redirects to /login if no token)
+- [x] Token + user stored in localStorage via `lib/auth.ts`
+- [x] 11/11 pytest tests passing
 
 ---
 
