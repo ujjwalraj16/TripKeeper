@@ -14,6 +14,7 @@ import app.models.user   # noqa: F401 — registers User table with SQLAlchemy m
 import app.models.place  # noqa: F401 — registers Place table with SQLAlchemy metadata
 import app.models.trip   # noqa: F401
 import app.models.itinerary # noqa: F401
+import app.models.collaborator # noqa: F401
 from app.api.routes import auth, places, trips
 
 

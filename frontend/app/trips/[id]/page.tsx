@@ -49,6 +49,7 @@ interface Trip {
   title: string;
   start_date: string | null;
   end_date: string | null;
+  share_token: string | null;
   items: ItineraryItem[];
 }
 
@@ -106,6 +107,7 @@ export default function TripDetailPage() {
   // DND State
   const [activeItem, setActiveItem] = useState<ItineraryItem | null>(null);
   const [optimisticItems, setOptimisticItems] = useState<ItineraryItem[]>([]);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -273,12 +275,20 @@ export default function TripDetailPage() {
           </a>
           <h1 className="text-xl font-bold">{trip.title}</h1>
         </div>
-        <button 
-          onClick={() => setDays([...days, days.length + 1])}
-          className="text-sm px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg hover:bg-gray-800 transition-colors"
-        >
-          + Add Day
-        </button>
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={() => setShowShareModal(true)}
+            className="text-sm px-4 py-2 bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 rounded-lg hover:bg-indigo-600/30 transition-colors"
+          >
+            Share
+          </button>
+          <button 
+            onClick={() => setDays([...days, days.length + 1])}
+            className="text-sm px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg hover:bg-gray-800 transition-colors"
+          >
+            + Add Day
+          </button>
+        </div>
       </nav>
 
       <div className="flex flex-1 overflow-hidden">
@@ -345,10 +355,46 @@ export default function TripDetailPage() {
         </div>
 
         {/* Map */}
-        <div className="w-[400px] border-l border-gray-800 p-4 bg-gray-950 hidden xl:block">
+        <div className="w-[400px] border-l border-gray-800 p-4 bg-gray-950 hidden xl:block z-0 relative">
           <TripMap items={optimisticItems} />
         </div>
       </div>
+
+      {showShareModal && trip && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-900 border border-gray-800 p-6 rounded-2xl w-full max-w-md shadow-2xl">
+            <h2 className="text-xl font-bold mb-2">Share this trip</h2>
+            <p className="text-sm text-gray-400 mb-6">Anyone with this link can view your itinerary.</p>
+            
+            <div className="flex items-center gap-2 mb-6">
+              <input 
+                type="text" 
+                readOnly 
+                value={`${typeof window !== 'undefined' ? window.location.origin : ''}/shared/${trip.share_token}`}
+                className="flex-1 bg-gray-950 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-300 outline-none"
+              />
+              <button 
+                onClick={() => {
+                  navigator.clipboard.writeText(`${window.location.origin}/shared/${trip.share_token}`);
+                  alert("Copied to clipboard!");
+                }}
+                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-sm font-medium transition-colors"
+              >
+                Copy
+              </button>
+            </div>
+
+            <div className="flex justify-end">
+              <button
+                onClick={() => setShowShareModal(false)}
+                className="px-4 py-2 rounded-lg font-medium text-gray-400 hover:text-white transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

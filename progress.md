@@ -12,7 +12,7 @@
 | 2 | Authentication | ✅ Done | 2026-09-30 | 2026-09-30 |
 | 3 | Places & Map | ✅ Done | 2026-09-30 | 2026-09-30 |
 | 4 | Trips & Itinerary | ✅ Done | 2026-09-30 | 2026-09-30 |
-| 5 | Sharing | ⏳ Pending | — | — |
+| 5 | Sharing | ✅ Done | 2026-09-30 | 2026-09-30 |
 | 6 | AI Features | ⏳ Pending | — | — |
 | 7 | AI Agent | ⏳ Pending | — | — |
 | 8 | Polish | ⏳ Pending | — | — |
@@ -102,14 +102,14 @@
 
 ### Phase 5 — Sharing
 **Goal:** Share trips via token or collaborator invite.
-**Status:** ⏳ Pending
+**Status:** ✅ Done
 
 **Deliverables:**
-- [ ] `share_token` UUID on Trip model
-- [ ] `GET /trips/shared/{token}` (public, read-only)
-- [ ] `TripCollaborator` model (viewer / editor roles)
-- [ ] Permission enforcement on all trip routes
-- [ ] Frontend: Share button + public trip view page
+- [x] `share_token` UUID on Trip model
+- [x] `GET /trips/shared/{token}` (public, read-only)
+- [x] `TripCollaborator` model (viewer / editor roles)
+- [x] Permission enforcement on all trip routes
+- [x] Frontend: Share button + public trip view page
 
 ---
 

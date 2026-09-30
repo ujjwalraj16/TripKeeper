@@ -6,6 +6,15 @@ from datetime import date, datetime
 from pydantic import BaseModel, Field
 
 from app.schemas.place import PlaceRead
+from app.schemas.user import UserRead
+
+class CollaboratorRead(BaseModel):
+    id: int
+    user_id: int
+    role: str
+    user: UserRead
+
+    model_config = {"from_attributes": True}
 
 
 class ItineraryItemBase(BaseModel):
@@ -40,11 +49,13 @@ class TripUpdate(BaseModel):
     title: str | None = Field(None, min_length=1, max_length=255)
     start_date: date | None = None
     end_date: date | None = None
+    share_token: str | None = None
 
 
 class TripRead(TripBase):
     id: int
     user_id: int
+    share_token: str | None
     created_at: datetime
     updated_at: datetime
 
@@ -53,6 +64,7 @@ class TripRead(TripBase):
 
 class TripWithItinerary(TripRead):
     items: list[ItineraryItemRead] = []
+    collaborators: list[CollaboratorRead] = []
 
 
 class ReorderItem(BaseModel):

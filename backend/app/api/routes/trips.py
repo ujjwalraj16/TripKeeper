@@ -1,25 +1,16 @@
 """
-api/routes/trips.py — Trip & Itinerary CRUD endpoints.
-
-Routes:
-  GET    /trips                → list all trips for current user
-  POST   /trips                → create a new trip
-  GET    /trips/{id}           → get a trip and its full itinerary
-  PUT    /trips/{id}           → update a trip's details
-  DELETE /trips/{id}           → delete a trip
-  
-  POST   /trips/{id}/items             → add a place to the itinerary
-  DELETE /trips/{id}/items/{item_id}   → remove a place from the itinerary
-  PATCH  /trips/{id}/items/reorder     → reorder places in the itinerary
+api/routes/trips.py — Trip & Itinerary CRUD endpoints with Collaboration support.
 """
 
+import uuid
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.core.database import get_db
 from app.core.deps import get_current_user
+from app.models.collaborator import TripCollaborator
 from app.models.itinerary import ItineraryItem
 from app.models.place import Place
 from app.models.trip import Trip
@@ -37,6 +28,37 @@ from app.schemas.trip import (
 router = APIRouter()
 
 
+async def _get_trip_or_404(db: AsyncSession, trip_id: int, user_id: int, require_edit: bool = False) -> Trip:
+    """
+    Helper to fetch a trip and ensure the user has permission to access it.
+    Owner always has access. Collaborators have access depending on role.
+    """
+    result = await db.execute(
+        select(Trip)
+        .options(
+            selectinload(Trip.items).joinedload(ItineraryItem.place),
+            selectinload(Trip.collaborators).joinedload(TripCollaborator.user)
+        )
+        .where(Trip.id == trip_id)
+    )
+    trip = result.scalar_one_or_none()
+    
+    if trip is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Trip not found.")
+
+    if trip.user_id == user_id:
+        return trip # Owner has full access
+
+    # Check collaborators
+    for collab in trip.collaborators:
+        if collab.user_id == user_id:
+            if require_edit and collab.role != "editor":
+                raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You need editor permissions.")
+            return trip
+
+    raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You do not have access to this trip.")
+
+
 # ── Trip CRUD ──────────────────────────────────────────────────────────────────
 
 @router.get("", response_model=list[TripRead])
@@ -44,10 +66,13 @@ async def list_trips(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> list[TripRead]:
-    """Return all trips for the current user."""
+    """Return all trips owned by OR shared with the current user."""
+    # Subquery for shared trips
+    shared_trips_query = select(TripCollaborator.trip_id).where(TripCollaborator.user_id == current_user.id)
+    
     result = await db.execute(
         select(Trip)
-        .where(Trip.user_id == current_user.id)
+        .where(or_(Trip.user_id == current_user.id, Trip.id.in_(shared_trips_query)))
         .order_by(Trip.start_date.desc().nulls_last(), Trip.created_at.desc())
     )
     trips = result.scalars().all()
@@ -66,11 +91,29 @@ async def create_trip(
         title=body.title,
         start_date=body.start_date,
         end_date=body.end_date,
+        share_token=str(uuid.uuid4())
     )
     db.add(trip)
     await db.commit()
     await db.refresh(trip)
     return TripRead.model_validate(trip)
+
+
+@router.get("/shared/{token}", response_model=TripWithItinerary)
+async def get_public_trip(
+    token: str,
+    db: AsyncSession = Depends(get_db),
+) -> TripWithItinerary:
+    """Public, read-only endpoint for viewing a shared trip via token."""
+    result = await db.execute(
+        select(Trip)
+        .options(selectinload(Trip.items).joinedload(ItineraryItem.place))
+        .where(Trip.share_token == token)
+    )
+    trip = result.scalar_one_or_none()
+    if trip is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invalid share link or trip not found.")
+    return TripWithItinerary.model_validate(trip)
 
 
 @router.get("/{trip_id}", response_model=TripWithItinerary)
@@ -80,14 +123,7 @@ async def get_trip(
     db: AsyncSession = Depends(get_db),
 ) -> TripWithItinerary:
     """Return a single trip with its full itinerary."""
-    result = await db.execute(
-        select(Trip)
-        .options(selectinload(Trip.items).joinedload(ItineraryItem.place))
-        .where(Trip.id == trip_id, Trip.user_id == current_user.id)
-    )
-    trip = result.scalar_one_or_none()
-    if trip is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Trip not found.")
+    trip = await _get_trip_or_404(db, trip_id, current_user.id, require_edit=False)
     return TripWithItinerary.model_validate(trip)
 
 
@@ -99,18 +135,13 @@ async def update_trip(
     db: AsyncSession = Depends(get_db),
 ) -> TripRead:
     """Update a trip's details."""
-    result = await db.execute(
-        select(Trip).where(Trip.id == trip_id, Trip.user_id == current_user.id)
-    )
-    trip = result.scalar_one_or_none()
-    if trip is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Trip not found.")
+    trip = await _get_trip_or_404(db, trip_id, current_user.id, require_edit=True)
 
     if body.title is not None:
         trip.title = body.title
-    if body.start_date is not NotImplemented: # Can be null
+    if body.start_date is not NotImplemented:
         trip.start_date = body.start_date
-    if body.end_date is not NotImplemented:   # Can be null
+    if body.end_date is not NotImplemented:
         trip.end_date = body.end_date
 
     await db.commit()
@@ -124,13 +155,14 @@ async def delete_trip(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> None:
-    """Delete a trip."""
+    """Delete a trip. Only the owner can delete the trip."""
+    # Do not use helper here because collaborators cannot delete the trip
     result = await db.execute(
         select(Trip).where(Trip.id == trip_id, Trip.user_id == current_user.id)
     )
     trip = result.scalar_one_or_none()
     if trip is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Trip not found.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Trip not found or not owner.")
     await db.delete(trip)
     await db.commit()
 
@@ -145,21 +177,16 @@ async def add_itinerary_item(
     db: AsyncSession = Depends(get_db),
 ) -> ItineraryItemRead:
     """Add a saved place to a trip's itinerary."""
-    # 1. Verify trip exists and belongs to user
-    trip_res = await db.execute(
-        select(Trip).where(Trip.id == trip_id, Trip.user_id == current_user.id)
-    )
-    if trip_res.scalar_one_or_none() is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Trip not found.")
+    await _get_trip_or_404(db, trip_id, current_user.id, require_edit=True)
 
-    # 2. Verify place exists and belongs to user
+    # Verify place exists and belongs to user (or is public - but right now places are private)
+    # Ideally, if it's a collaborative trip, they might add THEIR places.
     place_res = await db.execute(
         select(Place).where(Place.id == body.place_id, Place.user_id == current_user.id)
     )
     if place_res.scalar_one_or_none() is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Place not found.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Place not found in your saved places.")
 
-    # 3. Add item
     item = ItineraryItem(
         trip_id=trip_id,
         place_id=body.place_id,
@@ -170,7 +197,6 @@ async def add_itinerary_item(
     await db.commit()
     await db.refresh(item)
     
-    # Reload with place details
     result = await db.execute(
         select(ItineraryItem)
         .options(selectinload(ItineraryItem.place))
@@ -187,11 +213,10 @@ async def remove_itinerary_item(
     db: AsyncSession = Depends(get_db),
 ) -> None:
     """Remove a place from a trip's itinerary."""
-    # Verify trip ownership implicitly by checking item belongs to trip and trip belongs to user
+    await _get_trip_or_404(db, trip_id, current_user.id, require_edit=True)
+
     result = await db.execute(
-        select(ItineraryItem)
-        .join(Trip)
-        .where(ItineraryItem.id == item_id, ItineraryItem.trip_id == trip_id, Trip.user_id == current_user.id)
+        select(ItineraryItem).where(ItineraryItem.id == item_id, ItineraryItem.trip_id == trip_id)
     )
     item = result.scalar_one_or_none()
     if item is None:
@@ -209,21 +234,14 @@ async def reorder_itinerary(
     db: AsyncSession = Depends(get_db),
 ) -> dict:
     """Bulk update day_number and order for drag-and-drop support."""
-    # Verify trip ownership
-    trip_res = await db.execute(
-        select(Trip).where(Trip.id == trip_id, Trip.user_id == current_user.id)
-    )
-    if trip_res.scalar_one_or_none() is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Trip not found.")
+    await _get_trip_or_404(db, trip_id, current_user.id, require_edit=True)
 
-    # Fetch all items being updated
     item_ids = [i.id for i in body.items]
     items_res = await db.execute(
         select(ItineraryItem).where(ItineraryItem.id.in_(item_ids), ItineraryItem.trip_id == trip_id)
     )
     existing_items = {i.id: i for i in items_res.scalars().all()}
 
-    # Update in memory
     for update in body.items:
         if update.id in existing_items:
             existing_items[update.id].day_number = update.day_number

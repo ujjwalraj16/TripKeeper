@@ -22,6 +22,7 @@ class Trip(Base):
     title: Mapped[str] = mapped_column(String(255), nullable=False)
     start_date: Mapped[date | None] = mapped_column(Date, nullable=True)
     end_date: Mapped[date | None] = mapped_column(Date, nullable=True)
+    share_token: Mapped[str] = mapped_column(String(36), unique=True, index=True, nullable=True)
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
@@ -41,4 +42,10 @@ class Trip(Base):
         lazy="selectin", 
         cascade="all, delete-orphan",
         order_by="ItineraryItem.day_number, ItineraryItem.order"
+    )
+    collaborators = relationship(
+        "TripCollaborator",
+        back_populates="trip",
+        lazy="selectin",
+        cascade="all, delete-orphan"
     )
