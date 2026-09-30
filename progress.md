@@ -1,6 +1,6 @@
 # TripKeeper — Build Progress
 
-## Project Status: 🟡 In Progress
+## Project Status: 🟢 Phase 1 Complete
 
 ---
 
@@ -8,7 +8,7 @@
 
 | # | Phase | Status | Started | Completed |
 |---|---|---|---|---|
-| 1 | Setup | ⏳ Pending | — | — |
+| 1 | Setup | ✅ Done | 2026-09-30 | 2026-09-30 |
 | 2 | Authentication | ⏳ Pending | — | — |
 | 3 | Places & Map | ⏳ Pending | — | — |
 | 4 | Trips & Itinerary | ⏳ Pending | — | — |
@@ -26,15 +26,20 @@
 **Status:** ⏳ Pending approval
 
 **Deliverables:**
-- [ ] `backend/` folder with `venv`, `requirements.txt`, `app/main.py`
-- [ ] FastAPI CORS configured for `localhost:3000`
-- [ ] SQLite `database.py` with SQLAlchemy 2.0 engine
-- [ ] `GET /health` endpoint returns `{"status": "ok"}`
-- [ ] FastAPI `/docs` opens successfully
-- [ ] `frontend/` with Next.js + TypeScript + Tailwind CSS initialized
-- [ ] `react-leaflet` installed
-- [ ] Next.js dev server serves homepage
-- [ ] `.gitignore`, `.env.example`, `git init` done
+- [x] `backend/` folder with `venv`, `requirements.txt`, `app/main.py`
+- [x] FastAPI CORS configured for `localhost:3000`
+- [x] SQLite `database.py` with SQLAlchemy 2.0 engine
+- [x] `GET /health` endpoint returns `{"status": "ok", "version": "0.1.0"}` ✅
+- [x] FastAPI `/docs` returns HTTP 200 ✅
+- [x] `frontend/` with Next.js 16 + TypeScript + Tailwind CSS initialized ✅
+- [x] `react-leaflet`, `leaflet`, `@dnd-kit/*`, `axios` installed ✅
+- [x] Next.js dev server serves homepage at localhost:3000 (HTTP 200) ✅
+- [x] `.gitignore`, `.env.example`, `git init` done ✅
+
+**Notes:**
+- Port 8000 in use by another project; TripKeeper backend runs on **port 8001**
+- Python 3.14 required `greenlet` installed separately for SQLAlchemy async
+- Next.js 16 (latest) scaffolded successfully
 
 ---
 
@@ -140,7 +145,8 @@
 ---
 
 ## Git Commit Log
-*(Updated after each phase)*
+- `65f6578` — `chore: Phase 1 — project skeleton (FastAPI + Next.js)`
+- `03c9a33` — `fix: absorb frontend into root git repo (remove embedded .git)`
 
 ---
 
