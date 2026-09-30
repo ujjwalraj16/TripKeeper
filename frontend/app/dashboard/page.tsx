@@ -44,9 +44,9 @@ export default function DashboardPage() {
   return (
     <main className="min-h-screen bg-gray-950 text-white">
       {/* Navbar */}
-      <nav className="border-b border-gray-800 px-6 py-4 flex items-center justify-between">
-        <a href="/" className="flex items-center gap-2 text-xl font-bold">
-          <span>🗺️</span> TripKeeper
+      <nav className="border-b border-white/10 px-8 py-6 flex items-center justify-between bg-[#0a0a0a]">
+        <a href="/" className="font-serif text-2xl font-bold tracking-widest uppercase">
+          TripKeeper
         </a>
         <div className="flex items-center gap-4">
           <span className="text-sm text-gray-400">
@@ -63,37 +63,33 @@ export default function DashboardPage() {
       </nav>
 
       {/* Body */}
-      <div className="max-w-5xl mx-auto px-6 py-16 text-center">
+      <div className="max-w-6xl mx-auto px-6 py-20 text-center">
         {/* Welcome hero */}
-        <div className="mb-12">
-          <span className="text-6xl">🏝️</span>
-          <h1 className="mt-4 text-4xl font-bold">
-            Welcome to your dashboard
+        <div className="mb-20">
+          <h1 className="text-5xl md:text-6xl font-serif font-medium tracking-wide">
+            Welcome to your journey
           </h1>
-          <p className="mt-3 text-gray-400 text-lg">
-            Your trips and saved places will appear here.
+          <p className="mt-6 text-gray-400 font-light text-lg max-w-xl mx-auto">
+            Your upcoming travels, saved destinations, and curated itineraries await.
           </p>
         </div>
 
-        {/* Feature cards — placeholders for upcoming phases */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        {/* Feature cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
-            { icon: "📍", label: "Places", desc: "Save and organise your favourite spots", href: "/places", phase: 3, ready: true },
-            { icon: "🗓️", label: "Trips", desc: "Plan day-by-day itineraries", href: "/trips", phase: 4, ready: true },
-            { icon: "🤖", label: "AI Planner", desc: "Let AI generate your itinerary", href: "/ai-planner", phase: 6, ready: true },
-          ].map(({ icon, label, desc, href, phase, ready }) => (
+            { label: "Places", desc: "Curate your favourite spots", href: "/places" },
+            { label: "Trips", desc: "Plan detailed itineraries", href: "/trips" },
+            { label: "AI Planner", desc: "Generate intelligent routes", href: "/ai-planner" },
+          ].map(({ label, desc, href }) => (
             <a
               key={label}
               href={href}
-              className="group flex flex-col items-center gap-3 p-6 bg-gray-900 border border-gray-800
-                         rounded-2xl hover:border-indigo-700 hover:bg-gray-800/60 transition-all"
+              className="group flex flex-col items-center justify-center gap-4 p-12 bg-[#0f0f0f] border border-white/5
+                         rounded-2xl hover:border-[#e87a5d]/50 hover:bg-[#141414] transition-all duration-300"
             >
-              <span className="text-4xl">{icon}</span>
-              <h2 className="text-lg font-semibold">{label}</h2>
-              <p className="text-sm text-gray-500 text-center">{desc}</p>
-              <span className={`text-xs mt-auto font-medium ${ready ? "text-emerald-400" : "text-indigo-500"}`}>
-                {ready ? "✓ Live" : `Coming in Phase ${phase}`}
-              </span>
+              <h2 className="text-2xl font-serif tracking-wide">{label}</h2>
+              <p className="text-sm text-gray-500 text-center font-light">{desc}</p>
+              <div className="mt-6 w-8 h-[1px] bg-gray-700 group-hover:bg-[#e87a5d] group-hover:w-12 transition-all duration-300"></div>
             </a>
           ))}
         </div>

@@ -160,16 +160,16 @@ export default function PlacesPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-950 text-white overflow-hidden">
+    <div className="flex flex-col h-screen bg-[#0a0a0a] text-white overflow-hidden">
       {/* ── Navbar ──────────────────────────────────────────────────── */}
-      <nav className="flex-none border-b border-gray-800 px-6 py-3 flex items-center justify-between bg-gray-950/80 backdrop-blur-sm z-10">
-        <a href="/dashboard" className="flex items-center gap-2 text-xl font-bold tracking-tight">
-          <span>🗺️</span> TripKeeper
+      <nav className="flex-none border-b border-white/10 px-8 py-6 flex items-center justify-between bg-[#0a0a0a] z-10">
+        <a href="/dashboard" className="font-serif text-2xl font-bold tracking-widest uppercase">
+          TripKeeper
         </a>
         <div className="flex items-center gap-3">
           <a
             href="/dashboard"
-            className="text-sm text-gray-400 hover:text-white transition-colors"
+            className="text-sm text-gray-400 hover:text-white transition-colors tracking-widest uppercase font-medium"
             id="nav-dashboard"
           >
             ← Dashboard
@@ -180,11 +180,11 @@ export default function PlacesPage() {
       {/* ── Main layout ─────────────────────────────────────────────── */}
       <div className="flex flex-1 overflow-hidden">
         {/* Left panel */}
-        <aside className="w-[420px] flex-none flex flex-col border-r border-gray-800 overflow-y-auto">
+        <aside className="w-[420px] flex-none flex flex-col border-r border-white/5 overflow-y-auto bg-[#0a0a0a]">
           {/* Search */}
-          <div className="p-5 border-b border-gray-800 bg-gray-900/50">
-            <h1 className="text-lg font-bold mb-3 flex items-center gap-2">
-              <span>📍</span> Places
+          <div className="p-6 border-b border-white/5 bg-[#0f0f0f]">
+            <h1 className="text-xl font-serif tracking-wide mb-4">
+              Saved Places
             </h1>
             <div className="relative">
               <input
@@ -193,9 +193,9 @@ export default function PlacesPage() {
                 value={query}
                 onChange={(e) => handleQueryChange(e.target.value)}
                 placeholder="Search for a place…"
-                className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 pr-10
-                           text-sm placeholder-gray-500 focus:outline-none focus:border-indigo-500
-                           focus:ring-1 focus:ring-indigo-500/50 transition-all"
+                className="w-full bg-[#141414] border border-white/10 rounded-xl px-5 py-3 pr-10
+                           text-sm placeholder-gray-500 focus:outline-none focus:border-[#e87a5d]
+                           transition-all"
               />
               {searching && (
                 <div className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -242,7 +242,7 @@ export default function PlacesPage() {
                       id={`save-btn-${r.place_id}`}
                       onClick={(e) => { e.stopPropagation(); handleSavePlace(r); }}
                       disabled={savingId === r.place_id}
-                      className="flex-none mt-0.5 text-xs px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500
+                      className="flex-none mt-0.5 text-xs px-4 py-2 bg-[#e87a5d] hover:bg-[#d66b4f]
                                  rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
                     >
                       {savingId === r.place_id ? "…" : "Save"}
@@ -266,9 +266,8 @@ export default function PlacesPage() {
               Saved Places ({savedPlaces.length})
             </p>
             {savedPlaces.length === 0 ? (
-              <div className="px-5 py-8 text-center">
-                <span className="text-4xl">🗺️</span>
-                <p className="mt-3 text-sm text-gray-500">
+              <div className="px-5 py-12 text-center">
+                <p className="mt-3 text-sm text-gray-500 font-light">
                   Search for a place and save it to see it here.
                 </p>
               </div>

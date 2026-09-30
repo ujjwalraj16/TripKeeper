@@ -223,7 +223,7 @@ async def run_agent_loop(
     Runs the agent loop with Ollama.
     Max 5 iterations to prevent infinite loops.
     """
-    messages = [{"role": "system", "content": "You are a helpful travel assistant. You can manage a user's trip itinerary using the provided tools."}]
+    messages = [{"role": "system", "content": "You are a helpful travel assistant. You can manage a user's trip itinerary using the provided tools. Do NOT use emojis, asterisks, bold text, or markdown formatting in your response. Keep your responses as clean, plain text."}]
     messages.extend(chat_history[-5:]) # keep last 5 context
     messages.append({"role": "user", "content": f"Trip Context: ID={trip.id}, Title='{trip.title}'.\nCurrent Itinerary: {[f'Day {i.day_number}: {i.place.name} (Item ID: {i.id})' for i in trip.items]}\n\nUser Request: {user_message}"})
 

@@ -15,7 +15,7 @@ import json
 from urllib.parse import urlencode
 
 NOMINATIM_BASE = "https://nominatim.openstreetmap.org/search"
-USER_AGENT = "TripKeeper/0.1 (portfolio project; contact: tripkeeper@example.com)"
+USER_AGENT = "TripKeeperApp/1.0 (ujjwalraj)"
 
 
 async def search_nominatim(query: str, limit: int = 8) -> list[dict]:

@@ -44,41 +44,39 @@ export default function AIPlannerPage() {
         <div className="relative w-24 h-24 mb-8">
           <div className="absolute inset-0 border-4 border-indigo-500/20 rounded-full"></div>
           <div className="absolute inset-0 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-          <div className="absolute inset-0 flex items-center justify-center text-3xl animate-pulse">🤖</div>
         </div>
-        <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-          Crafting your perfect trip...
+        <h2 className="font-serif text-3xl font-medium mb-3 tracking-wide">
+          Curating your journey...
         </h2>
-        <p className="text-gray-400 text-center max-w-sm">
-          Our AI is exploring the map, discovering hidden gems, and building your itinerary. This can take 30-60 seconds depending on your hardware.
+        <p className="text-gray-400 text-center max-w-sm font-light">
+          Our intelligence is exploring destinations, discovering hidden gems, and structuring your ideal itinerary. This may take a moment.
         </p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
-      <nav className="border-b border-gray-800 px-6 py-4 flex items-center justify-between">
-        <a href="/dashboard" className="flex items-center gap-2 text-xl font-bold">
-          <span>🗺️</span> TripKeeper
+    <div className="min-h-screen bg-[#0a0a0a] text-white">
+      <nav className="border-b border-white/10 px-8 py-6 flex items-center justify-between">
+        <a href="/dashboard" className="font-serif text-2xl font-bold tracking-widest uppercase">
+          TripKeeper
         </a>
         <a href="/dashboard" className="text-sm text-gray-400 hover:text-white transition-colors">
           ← Dashboard
         </a>
       </nav>
 
-      <main className="max-w-2xl mx-auto px-6 py-12">
-        <div className="text-center mb-10">
-          <div className="text-5xl mb-4">✨</div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+      <main className="max-w-2xl mx-auto px-6 py-20">
+        <div className="text-center mb-16">
+          <h1 className="font-serif text-4xl md:text-5xl font-medium tracking-wide mb-4">
             AI Itinerary Generator
           </h1>
-          <p className="mt-3 text-gray-400">Tell us where you want to go, and let the AI do the heavy lifting.</p>
+          <p className="text-gray-400 font-light text-lg">Provide a destination, and let us intelligently craft your entire journey.</p>
         </div>
 
-        <div className="bg-gray-900 border border-gray-800 p-8 rounded-3xl shadow-xl relative overflow-hidden">
+        <div className="bg-[#0f0f0f] border border-white/5 p-10 rounded-2xl shadow-2xl relative overflow-hidden">
           {/* Subtle gradient background decoration */}
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-white/5 rounded-full blur-3xl pointer-events-none"></div>
           
           <form onSubmit={handleSubmit} className="relative z-10 space-y-6">
             <div>
@@ -134,9 +132,9 @@ export default function AIPlannerPage() {
             <button
               type="submit"
               disabled={!form.destination.trim()}
-              className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 rounded-xl font-bold text-lg transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2"
+              className="w-full py-4 mt-4 bg-[#e87a5d] hover:bg-[#d66b4f] rounded-xl font-medium text-lg tracking-wide transition-all shadow-lg disabled:opacity-50 flex items-center justify-center gap-2"
             >
-              Generate Itinerary <span>🚀</span>
+              Generate Itinerary
             </button>
           </form>
         </div>

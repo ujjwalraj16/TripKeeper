@@ -65,8 +65,8 @@ export default function TripMap({ items }: TripMapProps) {
       zoom: 2,
     });
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: "© OpenStreetMap contributors",
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+      attribution: '© <a href="https://carto.com/attributions">CARTO</a>',
     }).addTo(map);
 
     layersRef.current = L.layerGroup().addTo(map);

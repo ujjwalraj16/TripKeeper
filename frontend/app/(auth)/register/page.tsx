@@ -113,16 +113,16 @@ export default function RegisterPage() {
           id="btn-register"
           type="submit"
           disabled={loading}
-          className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50
-                     font-semibold text-white transition-colors"
+          className="w-full py-3.5 rounded-xl bg-[#e87a5d] hover:bg-[#d66b4f] disabled:opacity-50
+                     font-medium tracking-wide text-white transition-all shadow-lg"
         >
           {loading ? "Creating account…" : "Create Account"}
         </button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-gray-500">
+      <p className="mt-8 text-center text-sm text-gray-400 font-light tracking-wide">
         Already have an account?{" "}
-        <a href="/login" className="text-indigo-400 hover:text-indigo-300 font-medium">
+        <a href="/login" className="text-[#e87a5d] hover:text-[#d66b4f] font-medium transition-colors">
           Log in
         </a>
       </p>

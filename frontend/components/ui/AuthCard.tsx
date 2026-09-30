@@ -11,25 +11,22 @@ export default function AuthCard({
   children: React.ReactNode;
 }) {
   return (
-    <main className="min-h-screen flex items-center justify-center px-4 bg-gray-950">
-      {/* Glowing background blob */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -left-40 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl" />
-      </div>
+    <main className="min-h-screen flex items-center justify-center px-4 bg-[#0a0a0a] bg-[url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center">
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-[#0a0a0a]/80 backdrop-blur-sm pointer-events-none" />
 
-      <div className="relative w-full max-w-md">
+      <div className="relative w-full max-w-md z-10">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <a href="/" className="inline-flex items-center gap-2 text-2xl font-bold text-white">
-            <span>🗺️</span> TripKeeper
+        <div className="text-center mb-10">
+          <a href="/" className="inline-block font-serif text-3xl font-bold text-white tracking-widest uppercase mb-6">
+            TripKeeper
           </a>
-          <h1 className="mt-4 text-3xl font-bold text-white">{title}</h1>
-          <p className="mt-2 text-gray-400 text-sm">{subtitle}</p>
+          <h1 className="text-3xl font-serif text-white font-medium">{title}</h1>
+          <p className="mt-3 text-gray-400 font-light text-sm tracking-wide">{subtitle}</p>
         </div>
 
         {/* Card */}
-        <div className="bg-gray-900/80 backdrop-blur-md border border-gray-800 rounded-2xl p-8 shadow-2xl">
+        <div className="bg-[#0a0a0a]/60 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl">
           {children}
         </div>
       </div>

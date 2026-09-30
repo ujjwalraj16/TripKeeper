@@ -54,44 +54,45 @@ export default function TripsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
-      <nav className="border-b border-gray-800 px-6 py-4 flex items-center justify-between">
-        <a href="/dashboard" className="flex items-center gap-2 text-xl font-bold">
-          <span>🗺️</span> TripKeeper
+    <div className="min-h-screen bg-[#0a0a0a] text-white">
+      <nav className="border-b border-white/10 px-8 py-6 flex items-center justify-between">
+        <a href="/dashboard" className="font-serif text-2xl font-bold tracking-widest uppercase">
+          TripKeeper
         </a>
-        <a href="/dashboard" className="text-sm text-gray-400 hover:text-white transition-colors">
+        <a href="/dashboard" className="text-sm text-gray-400 hover:text-white transition-colors tracking-widest uppercase font-medium">
           ← Dashboard
         </a>
       </nav>
 
-      <main className="max-w-5xl mx-auto px-6 py-12">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold">Your Trips</h1>
+      <main className="max-w-6xl mx-auto px-6 py-20">
+        <div className="flex items-center justify-between mb-16">
+          <h1 className="text-4xl md:text-5xl font-serif font-medium tracking-wide">Your Trips</h1>
           <button
             onClick={() => setShowModal(true)}
-            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg font-medium transition-colors"
+            className="px-6 py-3 bg-[#e87a5d] hover:bg-[#d66b4f] rounded-full font-medium tracking-wide transition-all shadow-lg"
           >
             + New Trip
           </button>
         </div>
 
         {trips.length === 0 ? (
-          <div className="text-center py-20 bg-gray-900/50 rounded-2xl border border-gray-800">
-            <span className="text-5xl">🗓️</span>
-            <h2 className="mt-4 text-xl font-medium">No trips yet</h2>
-            <p className="mt-2 text-gray-500">Create your first trip to start planning.</p>
+          <div className="text-center py-32 bg-[#0f0f0f] rounded-2xl border border-white/5">
+            <h2 className="text-2xl font-serif font-medium tracking-wide">No journeys planned yet</h2>
+            <p className="mt-4 text-gray-500 font-light">Create your first trip to start curating.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {trips.map((trip) => (
               <a
                 key={trip.id}
                 href={`/trips/${trip.id}`}
-                className="block p-6 bg-gray-900 border border-gray-800 rounded-2xl hover:border-indigo-500 transition-all group"
+                className="block p-8 bg-[#0f0f0f] border border-white/5 rounded-2xl hover:border-[#e87a5d]/50 hover:bg-[#141414] transition-all duration-300 group"
               >
-                <div className="text-3xl mb-4 group-hover:scale-110 transition-transform origin-left">✈️</div>
-                <h2 className="text-xl font-bold truncate">{trip.title}</h2>
-                <p className="text-sm text-gray-500 mt-2">
+                <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <div className="w-4 h-4 rounded-full border-2 border-gray-400 group-hover:border-[#e87a5d]"></div>
+                </div>
+                <h2 className="text-2xl font-serif tracking-wide truncate">{trip.title}</h2>
+                <p className="text-sm text-gray-500 mt-3 font-light">
                   {trip.start_date && trip.end_date
                     ? `${trip.start_date} to ${trip.end_date}`
                     : "Dates pending"}
@@ -103,34 +104,34 @@ export default function TripsPage() {
       </main>
 
       {showModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-900 border border-gray-800 p-6 rounded-2xl w-full max-w-md shadow-2xl">
-            <h2 className="text-xl font-bold mb-4">Create a new trip</h2>
+        <div className="fixed inset-0 bg-[#0a0a0a]/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-[#0f0f0f] border border-white/10 p-8 rounded-3xl w-full max-w-md shadow-2xl">
+            <h2 className="text-2xl font-serif tracking-wide mb-6">Create a new journey</h2>
             <form onSubmit={handleCreateTrip}>
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-400 mb-2">Trip Title</label>
+              <div className="mb-8">
+                <label className="block text-sm font-medium text-gray-400 mb-3 tracking-wide">Trip Title</label>
                 <input
                   autoFocus
                   type="text"
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
                   placeholder="e.g. Summer in Paris"
-                  className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white placeholder-gray-600 focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl px-5 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#e87a5d] transition-colors"
                   required
                 />
               </div>
-              <div className="flex gap-3 justify-end">
+              <div className="flex gap-4 justify-end">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 rounded-lg font-medium text-gray-400 hover:text-white transition-colors"
+                  className="px-6 py-3 rounded-full font-medium text-gray-400 hover:text-white transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={!newTitle.trim()}
-                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg font-medium transition-colors disabled:opacity-50"
+                  className="px-6 py-3 bg-[#e87a5d] hover:bg-[#d66b4f] rounded-full font-medium tracking-wide transition-colors disabled:opacity-50"
                 >
                   Create
                 </button>

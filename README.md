@@ -1,6 +1,6 @@
 # 🗺️ TripKeeper
 
-TripKeeper is a modern, AI-powered travel planning application built as a placement-ready portfolio project. It features interactive maps, a drag-and-drop itinerary builder, real-time geocoding, public sharing links, and an autonomous AI agent capable of planning and modifying your trips via a chat interface.
+TripKeeper is a modern, AI-powered travel planning application. It features interactive maps, a drag-and-drop itinerary builder, real-time geocoding, public sharing links, and an autonomous AI agent capable of planning and modifying your trips via a chat interface.
 
 ![TripKeeper Banner](docs/banner_placeholder.png)
 

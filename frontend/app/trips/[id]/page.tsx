@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import {
@@ -75,8 +75,8 @@ function SortableItem({ item, onRemove }: { item: ItineraryItem; onRemove?: (id:
     <div
       ref={setNodeRef}
       style={style}
-      className={`p-3 bg-gray-900 border border-gray-800 rounded-xl flex items-start gap-3 group relative
-                  ${isDragging ? "opacity-30 border-indigo-500 shadow-xl" : "hover:border-gray-600"}`}
+      className={`p-4 bg-[#0f0f0f] border border-white/5 rounded-xl flex items-start gap-4 group relative
+                  ${isDragging ? "opacity-30 border-[#e87a5d] shadow-xl" : "hover:border-white/20 transition-colors"}`}
       {...attributes}
       {...listeners}
     >
@@ -315,34 +315,34 @@ export default function TripDetailPage() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-gray-950 text-white overflow-hidden">
-      <nav className="flex-none border-b border-gray-800 px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <a href="/trips" className="text-sm text-gray-400 hover:text-white transition-colors">
-            ← Back to Trips
+    <div className="flex flex-col h-screen bg-[#0a0a0a] text-white overflow-hidden font-sans">
+      <nav className="flex-none border-b border-white/10 px-8 py-6 flex items-center justify-between">
+        <div className="flex items-center gap-6">
+          <a href="/trips" className="text-sm text-gray-400 hover:text-white transition-colors uppercase tracking-widest font-medium">
+            ← Trips
           </a>
-          <h1 className="text-xl font-bold">{trip.title}</h1>
+          <h1 className="text-2xl font-serif font-medium tracking-wide">{trip.title}</h1>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <button 
             onClick={() => setShowChat(!showChat)}
-            className={`text-sm px-4 py-2 border rounded-lg transition-colors flex items-center gap-2 ${
+            className={`text-sm px-6 py-2.5 border rounded-full transition-all flex items-center gap-2 tracking-wide font-medium ${
               showChat 
-                ? "bg-purple-600 border-purple-500 text-white" 
-                : "bg-purple-600/20 text-purple-400 border-purple-500/30 hover:bg-purple-600/30"
+                ? "bg-[#e87a5d] border-[#e87a5d] text-white" 
+                : "bg-white/5 text-gray-300 border-white/10 hover:bg-white/10"
             }`}
           >
-            <span>🤖</span> AI Assistant
+            AI Assistant
           </button>
           <button 
             onClick={() => setShowShareModal(true)}
-            className="text-sm px-4 py-2 bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 rounded-lg hover:bg-indigo-600/30 transition-colors"
+            className="text-sm px-6 py-2.5 bg-white/5 text-gray-300 border border-white/10 rounded-full hover:bg-white/10 transition-all tracking-wide font-medium"
           >
             Share
           </button>
           <button 
             onClick={() => setDays([...days, days.length + 1])}
-            className="text-sm px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg hover:bg-gray-800 transition-colors"
+            className="text-sm px-6 py-2.5 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 transition-all tracking-wide font-medium"
           >
             + Add Day
           </button>
@@ -365,18 +365,18 @@ export default function TripDetailPage() {
                 .sort((a, b) => a.order - b.order);
 
               return (
-                <div key={day} className="flex-none w-[320px] flex flex-col bg-gray-900/50 rounded-2xl border border-gray-800 overflow-hidden">
-                  <div className="p-4 border-b border-gray-800 bg-gray-900">
-                    <h2 className="font-bold">Day {day}</h2>
+                <div key={day} className="flex-none w-[340px] flex flex-col bg-[#0f0f0f] rounded-2xl border border-white/5 overflow-hidden">
+                  <div className="p-5 border-b border-white/5 bg-[#141414]">
+                    <h2 className="font-serif text-lg tracking-wide">Day {day}</h2>
                   </div>
                   
-                  <div className="p-3 flex-1 overflow-y-auto">
+                  <div className="p-4 flex-1 overflow-y-auto">
                     <SortableContext
                       id={`day-${day}`}
                       items={dayItems.map(i => i.id)}
                       strategy={verticalListSortingStrategy}
                     >
-                      <div className="flex flex-col gap-3 min-h-[100px]">
+                      <div className="flex flex-col gap-4 min-h-[100px]">
                         {dayItems.map((item) => (
                           <SortableItem key={item.id} item={item} onRemove={handleRemoveItem} />
                         ))}
@@ -384,9 +384,9 @@ export default function TripDetailPage() {
                     </SortableContext>
                     
                     {/* Add Place Dropdown */}
-                    <div className="mt-4">
+                    <div className="mt-6">
                       <select
-                        className="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-400 hover:border-gray-600 transition-colors cursor-pointer outline-none"
+                        className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl px-4 py-3 text-sm text-gray-400 hover:border-white/20 transition-colors cursor-pointer outline-none focus:border-[#e87a5d]"
                         onChange={(e) => {
                           if(e.target.value) {
                             handleAddPlace(parseInt(e.target.value), day);
@@ -413,19 +413,19 @@ export default function TripDetailPage() {
         </div>
 
         {/* Map */}
-        <div className="w-[400px] border-l border-gray-800 p-4 bg-gray-950 hidden xl:block z-0 relative">
+        <div className="w-[450px] border-l border-white/5 p-0 bg-[#0a0a0a] hidden xl:block z-0 relative">
           <TripMap items={optimisticItems} />
         </div>
       </div>
 
       {/* Floating Chat Panel */}
       {showChat && (
-        <div className="absolute bottom-6 right-6 w-96 h-[500px] bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl flex flex-col z-40 overflow-hidden transform transition-all">
-          <div className="bg-gray-800 p-4 border-b border-gray-700 flex justify-between items-center">
-            <div className="flex items-center gap-2 font-bold text-sm">
-              <span className="text-xl">🤖</span> Trip Assistant
+        <div className="absolute bottom-8 right-8 xl:right-[480px] w-[400px] h-[550px] bg-[#0f0f0f] border border-white/10 rounded-3xl shadow-2xl flex flex-col z-40 overflow-hidden transform transition-all">
+          <div className="bg-[#141414] p-5 border-b border-white/5 flex justify-between items-center">
+            <div className="flex items-center gap-3 font-serif text-lg tracking-wide">
+              Trip Assistant
             </div>
-            <button onClick={() => setShowChat(false)} className="text-gray-400 hover:text-white">✕</button>
+            <button onClick={() => setShowChat(false)} className="text-gray-400 hover:text-white transition-colors">✕</button>
           </div>
           
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -444,10 +444,10 @@ export default function TripDetailPage() {
             
             {chatHistory.map((msg, idx) => (
               <div key={idx} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm ${
+                <div className={`max-w-[85%] rounded-2xl px-5 py-3 text-sm font-light leading-relaxed ${
                   msg.role === "user" 
-                    ? "bg-indigo-600 text-white rounded-br-none" 
-                    : "bg-gray-800 text-gray-200 border border-gray-700 rounded-bl-none"
+                    ? "bg-[#e87a5d] text-white rounded-br-sm" 
+                    : "bg-[#1a1a1a] text-gray-200 border border-white/5 rounded-bl-sm"
                 }`}>
                   {msg.content}
                 </div>
@@ -455,7 +455,7 @@ export default function TripDetailPage() {
             ))}
             {chatLoading && (
               <div className="flex justify-start">
-                <div className="bg-gray-800 text-gray-400 border border-gray-700 rounded-2xl rounded-bl-none px-4 py-2 text-sm flex gap-1">
+                <div className="bg-[#1a1a1a] text-gray-400 border border-white/5 rounded-2xl rounded-bl-sm px-5 py-3 text-sm flex gap-1">
                   <span className="animate-bounce">.</span><span className="animate-bounce delay-75">.</span><span className="animate-bounce delay-150">.</span>
                 </div>
               </div>
@@ -463,19 +463,19 @@ export default function TripDetailPage() {
             <div ref={chatEndRef} />
           </div>
 
-          <form onSubmit={handleSendChat} className="p-3 border-t border-gray-700 bg-gray-800">
+          <form onSubmit={handleSendChat} className="p-4 border-t border-white/5 bg-[#141414]">
             <div className="relative">
               <input 
                 type="text"
                 value={chatMessage}
                 onChange={(e) => setChatMessage(e.target.value)}
                 placeholder="Ask the AI to edit your trip..."
-                className="w-full bg-gray-900 border border-gray-700 rounded-xl pl-4 pr-10 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500"
+                className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl pl-5 pr-12 py-3 text-sm text-white focus:outline-none focus:border-[#e87a5d] transition-colors"
               />
               <button 
                 type="submit" 
                 disabled={chatLoading || !chatMessage.trim()}
-                className="absolute right-2 top-2 text-indigo-400 hover:text-indigo-300 disabled:opacity-50"
+                className="absolute right-3 top-2.5 w-8 h-8 flex items-center justify-center bg-[#e87a5d] text-white rounded-lg hover:bg-[#d66b4f] disabled:opacity-50 transition-colors"
               >
                 ↑
               </button>
