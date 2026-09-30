@@ -130,16 +130,16 @@
 
 ### Phase 7 — AI Agent (Ollama)
 **Goal:** Tool-calling agent that edits trips via chat.
-**Status:** ⏳ Pending
+**Status:** ✅ Done
 
 **Deliverables:**
-- [ ] 6 tools: `add_place_to_trip`, `remove_place`, `optimize_route`, `get_weather`, `estimate_budget`, `search_places`
-- [ ] Agent loop (max 5 iterations)
-- [ ] Pydantic validation on all tool arguments
-- [ ] `POST /ai/agent/chat`
-- [ ] Chat panel on trip detail page
-- [ ] Permission check (editor/owner only)
-- [ ] Tool call logging
+- [x] 6 tools: `add_place_to_trip`, `remove_place`, `optimize_route`, `get_weather`, `estimate_budget`, `search_places`
+- [x] Agent loop (max 5 iterations)
+- [x] Pydantic validation on all tool arguments
+- [x] `POST /ai/agent/chat`
+- [x] Chat panel on trip detail page
+- [x] Permission check (editor/owner only)
+- [x] Tool call logging
 
 ---
 

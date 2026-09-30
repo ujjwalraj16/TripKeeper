@@ -15,11 +15,12 @@ from app.models.itinerary import ItineraryItem
 from app.models.place import Place
 from app.models.trip import Trip
 from app.models.user import User
-from app.schemas.ai import PlanRequest
+from app.schemas.ai import PlanRequest, ChatRequest
 from app.schemas.trip import TripWithItinerary, TripRead
 from app.services.ai import generate_itinerary
 from app.services.geocoding import search_nominatim
 from app.services.route_optimizer import optimize_day_route
+from app.services.agent import run_agent_loop
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -161,3 +162,47 @@ async def optimize_trip_route(
 
     await db.commit()
     return {"status": "success", "message": f"Optimized {total_updated} items across {len(items_by_day)} days."}
+
+
+@router.post("/agent/chat", status_code=status.HTTP_200_OK)
+async def ai_agent_chat(
+    body: ChatRequest,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    """
+    Accepts a user message and trip context, passes to Ollama Agent Loop,
+    executes any requested tools (editing the trip), and returns the final response.
+    """
+    # Verify trip ownership / permissions
+    from app.models.collaborator import TripCollaborator
+    result = await db.execute(
+        select(Trip)
+        .options(
+            selectinload(Trip.items).joinedload(ItineraryItem.place),
+            selectinload(Trip.collaborators)
+        )
+        .where(Trip.id == body.trip_id)
+    )
+    trip = result.scalar_one_or_none()
+    if trip is None:
+        raise HTTPException(status_code=404, detail="Trip not found.")
+        
+    has_access = False
+    if trip.user_id == current_user.id:
+        has_access = True
+    else:
+        for collab in trip.collaborators:
+            if collab.user_id == current_user.id and collab.role == "editor":
+                has_access = True
+                
+    if not has_access:
+        raise HTTPException(status_code=403, detail="Not authorized to edit this trip.")
+
+    # Convert Pydantic history to dict
+    chat_history = [{"role": msg.role, "content": msg.content} for msg in body.history]
+
+    # Run agent loop
+    response_text = await run_agent_loop(db, trip, body.message, chat_history)
+    
+    return {"reply": response_text}

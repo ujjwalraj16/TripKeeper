@@ -27,3 +27,12 @@ class AIDay(BaseModel):
 class AIPlanResult(BaseModel):
     title: str = Field(..., description="A catchy title for the trip.")
     itinerary: List[AIDay]
+
+class ChatMessage(BaseModel):
+    role: str
+    content: str
+
+class ChatRequest(BaseModel):
+    trip_id: int
+    message: str
+    history: List[ChatMessage] = []

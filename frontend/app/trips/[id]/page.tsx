@@ -44,6 +44,11 @@ interface ItineraryItem {
   place: Place;
 }
 
+interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
 interface Trip {
   id: number;
   title: string;
@@ -109,6 +114,13 @@ export default function TripDetailPage() {
   const [optimisticItems, setOptimisticItems] = useState<ItineraryItem[]>([]);
   const [showShareModal, setShowShareModal] = useState(false);
 
+  // Chat State
+  const [showChat, setShowChat] = useState(false);
+  const [chatMessage, setChatMessage] = useState("");
+  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
+  const [chatLoading, setChatLoading] = useState(false);
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
@@ -123,6 +135,42 @@ export default function TripDetailPage() {
     fetchPlaces();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  // Scroll chat to bottom
+  useEffect(() => {
+    if (showChat && chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [chatHistory, showChat]);
+
+  const handleSendChat = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!chatMessage.trim() || chatLoading) return;
+
+    const userMsg = chatMessage.trim();
+    setChatMessage("");
+    
+    // Optimistic update
+    const newHistory: ChatMessage[] = [...chatHistory, { role: "user", content: userMsg }];
+    setChatHistory(newHistory);
+    setChatLoading(true);
+
+    try {
+      const { data } = await api.post("/ai/agent/chat", {
+        trip_id: parseInt(id as string),
+        message: userMsg,
+        history: chatHistory
+      });
+
+      setChatHistory([...newHistory, { role: "assistant", content: data.reply }]);
+      // Refresh the trip in case the AI modified it
+      fetchTrip();
+    } catch (err) {
+      setChatHistory([...newHistory, { role: "assistant", content: "Sorry, I encountered an error. Is Ollama running?" }]);
+    } finally {
+      setChatLoading(false);
+    }
+  };
 
   const fetchTrip = async () => {
     try {
@@ -277,6 +325,16 @@ export default function TripDetailPage() {
         </div>
         <div className="flex items-center gap-3">
           <button 
+            onClick={() => setShowChat(!showChat)}
+            className={`text-sm px-4 py-2 border rounded-lg transition-colors flex items-center gap-2 ${
+              showChat 
+                ? "bg-purple-600 border-purple-500 text-white" 
+                : "bg-purple-600/20 text-purple-400 border-purple-500/30 hover:bg-purple-600/30"
+            }`}
+          >
+            <span>🤖</span> AI Assistant
+          </button>
+          <button 
             onClick={() => setShowShareModal(true)}
             className="text-sm px-4 py-2 bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 rounded-lg hover:bg-indigo-600/30 transition-colors"
           >
@@ -359,6 +417,72 @@ export default function TripDetailPage() {
           <TripMap items={optimisticItems} />
         </div>
       </div>
+
+      {/* Floating Chat Panel */}
+      {showChat && (
+        <div className="absolute bottom-6 right-6 w-96 h-[500px] bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl flex flex-col z-40 overflow-hidden transform transition-all">
+          <div className="bg-gray-800 p-4 border-b border-gray-700 flex justify-between items-center">
+            <div className="flex items-center gap-2 font-bold text-sm">
+              <span className="text-xl">🤖</span> Trip Assistant
+            </div>
+            <button onClick={() => setShowChat(false)} className="text-gray-400 hover:text-white">✕</button>
+          </div>
+          
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            {chatHistory.length === 0 && (
+              <div className="text-center text-sm text-gray-500 mt-10">
+                <p>Hi! I'm your AI Trip Assistant.</p>
+                <p className="mt-2">Try asking me to:</p>
+                <ul className="mt-2 space-y-1 text-gray-400">
+                  <li>"Add the Louvre to Day 1"</li>
+                  <li>"Remove item 3"</li>
+                  <li>"Optimize my route"</li>
+                  <li>"What's the weather in Paris?"</li>
+                </ul>
+              </div>
+            )}
+            
+            {chatHistory.map((msg, idx) => (
+              <div key={idx} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                <div className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm ${
+                  msg.role === "user" 
+                    ? "bg-indigo-600 text-white rounded-br-none" 
+                    : "bg-gray-800 text-gray-200 border border-gray-700 rounded-bl-none"
+                }`}>
+                  {msg.content}
+                </div>
+              </div>
+            ))}
+            {chatLoading && (
+              <div className="flex justify-start">
+                <div className="bg-gray-800 text-gray-400 border border-gray-700 rounded-2xl rounded-bl-none px-4 py-2 text-sm flex gap-1">
+                  <span className="animate-bounce">.</span><span className="animate-bounce delay-75">.</span><span className="animate-bounce delay-150">.</span>
+                </div>
+              </div>
+            )}
+            <div ref={chatEndRef} />
+          </div>
+
+          <form onSubmit={handleSendChat} className="p-3 border-t border-gray-700 bg-gray-800">
+            <div className="relative">
+              <input 
+                type="text"
+                value={chatMessage}
+                onChange={(e) => setChatMessage(e.target.value)}
+                placeholder="Ask the AI to edit your trip..."
+                className="w-full bg-gray-900 border border-gray-700 rounded-xl pl-4 pr-10 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500"
+              />
+              <button 
+                type="submit" 
+                disabled={chatLoading || !chatMessage.trim()}
+                className="absolute right-2 top-2 text-indigo-400 hover:text-indigo-300 disabled:opacity-50"
+              >
+                ↑
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
 
       {showShareModal && trip && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
