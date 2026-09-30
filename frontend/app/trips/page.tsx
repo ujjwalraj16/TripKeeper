@@ -45,6 +45,17 @@ export default function TripsPage() {
     }
   };
 
+  const handleDeleteTrip = async (e: React.MouseEvent, id: number) => {
+    e.preventDefault();
+    if (!confirm("Are you sure you want to delete this trip?")) return;
+    try {
+      await api.delete(`/trips/${id}`);
+      setTrips(trips.filter((t) => t.id !== id));
+    } catch {
+      alert("Failed to delete trip.");
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-950">
@@ -86,8 +97,15 @@ export default function TripsPage() {
               <a
                 key={trip.id}
                 href={`/trips/${trip.id}`}
-                className="block p-8 bg-[#0f0f0f] border border-white/5 rounded-2xl hover:border-[#e87a5d]/50 hover:bg-[#141414] transition-all duration-300 group"
+                className="relative block p-8 bg-[#0f0f0f] border border-white/5 rounded-2xl hover:border-[#e87a5d]/50 hover:bg-[#141414] transition-all duration-300 group"
               >
+                <button
+                  onClick={(e) => handleDeleteTrip(e, trip.id)}
+                  className="absolute top-4 right-4 p-2 text-gray-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                  title="Delete Trip"
+                >
+                  ✕
+                </button>
                 <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                   <div className="w-4 h-4 rounded-full border-2 border-gray-400 group-hover:border-[#e87a5d]"></div>
                 </div>
