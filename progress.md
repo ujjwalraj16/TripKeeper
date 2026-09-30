@@ -11,7 +11,7 @@
 | 1 | Setup | ✅ Done | 2026-09-30 | 2026-09-30 |
 | 2 | Authentication | ✅ Done | 2026-09-30 | 2026-09-30 |
 | 3 | Places & Map | ✅ Done | 2026-09-30 | 2026-09-30 |
-| 4 | Trips & Itinerary | ⏳ Pending | — | — |
+| 4 | Trips & Itinerary | ✅ Done | 2026-09-30 | 2026-09-30 |
 | 5 | Sharing | ⏳ Pending | — | — |
 | 6 | AI Features | ⏳ Pending | — | — |
 | 7 | AI Agent | ⏳ Pending | — | — |
@@ -86,17 +86,17 @@
 
 ### Phase 4 — Trips & Itinerary
 **Goal:** Day-wise itinerary with drag-and-drop and route map.
-**Status:** ⏳ Pending
+**Status:** ✅ Done
 
 **Deliverables:**
-- [ ] `Trip`, `ItineraryItem` SQLAlchemy models
-- [ ] Trip CRUD routes
-- [ ] Add/remove places to a day
-- [ ] `PATCH /trips/{id}/items/reorder`
-- [ ] Frontend: Trips list page
-- [ ] Trip detail page with day-wise columns
-- [ ] Drag-and-drop with `dnd-kit`
-- [ ] Map showing trip stops connected in order
+- [x] `Trip`, `ItineraryItem` SQLAlchemy models
+- [x] Trip CRUD routes
+- [x] Add/remove places to a day
+- [x] `PATCH /trips/{id}/items/reorder`
+- [x] Frontend: Trips list page
+- [x] Trip detail page with day-wise columns
+- [x] Drag-and-drop with `dnd-kit`
+- [x] Map showing trip stops connected in order
 
 ---
 

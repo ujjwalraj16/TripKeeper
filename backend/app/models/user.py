@@ -26,3 +26,4 @@ class User(Base):
 
     # Relationships
     places = relationship("Place", back_populates="user", lazy="noload", cascade="all, delete-orphan")
+    trips = relationship("Trip", back_populates="user", lazy="noload", cascade="all, delete-orphan")

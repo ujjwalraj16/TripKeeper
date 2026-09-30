@@ -79,7 +79,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           {[
             { icon: "📍", label: "Places", desc: "Save and organise your favourite spots", href: "/places", phase: 3, ready: true },
-            { icon: "🗓️", label: "Trips", desc: "Plan day-by-day itineraries", href: "#", phase: 4, ready: false },
+            { icon: "🗓️", label: "Trips", desc: "Plan day-by-day itineraries", href: "/trips", phase: 4, ready: true },
             { icon: "🤖", label: "AI Planner", desc: "Let AI generate your itinerary", href: "#", phase: 6, ready: false },
           ].map(({ icon, label, desc, href, phase, ready }) => (
             <a
